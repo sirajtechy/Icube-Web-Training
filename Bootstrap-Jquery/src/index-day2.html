@@ -1,0 +1,140 @@
+ht<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    .tabs div{
+    width:200px;
+    height: 100px;
+    border:1px solid black;
+    margin-top:20px;
+    text-align:center;
+    border-radius:10px;
+    padding-top:70px;
+  }
+  div:first-child{
+    margin-top:0px;
+
+  }
+  .hider{
+  /* visibility: hidden;*/
+  display:none;
+  }
+  .creatuserswrapper{
+    position: absolute;
+      top: 40px;
+      left: 220px;
+  }
+  section{
+    position: absolute;
+      top: 80px;
+      left: 220px;
+      height: 500px;
+      width: 530px;
+      border: 1px solid red
+  }
+  .highlight{
+      background:yellow;
+  }
+  </style>
+  <script src="../js/jquery-3.3.1.min.js"></script>
+
+  <script>
+    var contentArray = ["first contnet", "second contnet second contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contnesecond contne", "third contnet"]
+
+    var userCreateObj = {
+      "firstname": "",
+      "lastname": "Rahman",
+      "age": 21,
+      "username": "kjhsjh",
+      "password": "kjdkj",
+      "gender": "Male"
+    }
+
+    $(document).ready(function () {
+
+      $(".userbutton").on('click', function () {
+        //alert('dsa')
+        $.get("http://192.168.0.118:8005/api/users/", function (myusers) {
+          // console.log("got data",myusers)
+          var htmlStr = "";
+          $.each(myusers, function (i, user) {
+            console.log('index', i, "user", user);
+            htmlStr += '<p data-uid="' + user._id + '">' + user.firstname + " " + user.lastname + '</p>';
+
+          });
+          $("section").html(htmlStr);
+          appendChildEvents()
+
+        })
+      });
+
+      $(".createUser").on('click', function () {
+        userCreateObj.firstname = $('.uname').val()
+        console.log('post', userCreateObj);
+        $(".userdetails").text('content is loading ');
+        $.ajax({
+          url: "http://192.168.0.118:8005/api/users",
+          contentType: "application/json",
+          method: 'POST',
+          data: JSON.stringify(userCreateObj),
+          success: function (successData) {
+            $(".userbutton").trigger('click')
+            console.log("success", successData)
+
+          },
+          error: function (err) {
+            console.log("err", err);
+          }
+        })
+
+      })
+
+
+
+
+      function appendChildEvents() {
+        $(".userdetails p").off('click').on('click', function () {
+
+
+          var currentuserid = $(this).attr('data-uid')
+
+          $.get("http://192.168.0.118:8005/api/users/" + currentuserid, function (singleuser) {
+            console.log('single user', singleuser.age)
+
+
+          })
+
+        })
+      }
+    });
+
+  </script>
+
+</head>
+
+<body>
+  <button class='userbutton'>get all users</button>
+  <div class='tabs'>
+    <div class='tab1'> ab1tab1tab1tab1tab1
+      <span>grand child 1</span>
+    </div>
+    <div data-tabname='1'>tab2
+      <span>grandchild 2</span>
+
+    </div>
+    <div data-tabname='2'>tab3
+      <span>grand child 3</span>
+    </div>
+  </div>
+  <div class="creatuserswrapper">
+    <input type="text" class="uname" />
+    <button class='createUser'>create user</button>
+  </div>
+  <section class="userdetails">
+    <h1>please click button to load users </h1>
+
+  </section>
+</body>
+
+</html>
