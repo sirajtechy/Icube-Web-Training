@@ -2,3 +2,19 @@
   padding: 30px;
   margin: 15px;
 }
+
+.bg-me {
+  background-image: url("../../assets/images/Desert.jpg")
+}
+
+/* .hover-me  tbody td:hover {
+  background-color  : blue;
+} */
+
+.vertical-me {
+  margin-bottom: 15px;
+}
+
+.jumbo-me {
+  margin-top: 25px;
+}
